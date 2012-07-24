@@ -33,7 +33,7 @@ safari:
 # just put one Mob-Type per line, the Mob-Types may be spelled case-insensitive (so e.g.: "SLIME", "Slime" and "slime" are equally recognized)
 # for convenience, the Constants are listed at the end of the file
 
-# valid_hours: if null: safari is valid all day and night times
+# valid_hours: if null/unset: safari is valid all day and night times
 # if valid_hours is set, it needs to be an array of "hours" (24-hour format: e.g. 14 = 2 p.m) into the list
 # like: [20,21,22,23,24,0,1,2,3,4] which corresponds to night-hours: 8 p.m. until 4 a.m.
 
@@ -50,7 +50,6 @@ safaris:
         description: Kill Mobs which are harmless (Cows, Chicken, Pig, Sheep)
         name: Harmlose Jagd
         required_points: 0
-        prize: test
         mobs_to_kill: 5        
         types_of_mobs_to_kill:
             - CHICKEN
@@ -61,7 +60,6 @@ safaris:
         description: Go diving, kill squids
         name: Harmless, but wet ;)
         required_points: 0
-        prize: test
         mobs_to_kill: 5        
         types_of_mobs_to_kill:
             - SQUID
@@ -69,7 +67,6 @@ safaris:
         description: Kill mobs during tea-time (14-17 Uhr)
         name: Teatime
         required_points: 1
-        prize: test
         valid_hours: [14,15,16,17]
         mobs_to_kill: 5        
         types_of_mobs_to_kill:
@@ -81,7 +78,6 @@ safaris:
         description: Kill mobs (Skelettons, Zombies, Zombie Pigmen) during night hours
         name: Undead-Hunt
         required_points: 1
-        prize: test
         valid_hours: [20,21,22,23,0,1,2,3,4]
         mobs_to_kill: 5
         types_of_mobs_to_kill:
@@ -92,7 +88,6 @@ safaris:
         description: Kill undead mobs (Skelettons, Zombies, Zombie Pigmen)
         name: Untotenjagd
         required_points: 2
-        prize: test
         mobs_to_kill: 5
         types_of_mobs_to_kill:
             - SKELETON
@@ -102,7 +97,6 @@ safaris:
         description: Kill ugly mobs (Slimes, Creeper)
         name: Ekelfaktor hoch 10
         required_points: 2
-        prize: test
         mobs_to_kill: 5
         types_of_mobs_to_kill:
             - SLIME
@@ -111,7 +105,6 @@ safaris:
         description: KillCreeper
         name: Spooky, explosive Hunt
         required_points: 3
-        prize: test
         mobs_to_kill: 5
         types_of_mobs_to_kill:
             - CREEPER
@@ -119,7 +112,6 @@ safaris:
         description: Kill Nether-mobs
         name: Hunt in another dimension
         required_points: 3
-        prize: test
         mobs_to_kill: 5
         types_of_mobs_to_kill:
             - GHAST

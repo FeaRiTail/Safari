@@ -1,0 +1,58 @@
+<project name="Minecraft Safari-Plugin" default="deploy" basedir=".">
+	
+	
+	<property name="minecraft.server.dir" value="D:/Privat/minecraft/server"/>
+	<property name="minecraft.server.run_command" value="D:/Privat/minecraft/server/startBukkit_Server.bat"/>
+	<property name="minecraft.server.run_command1" value="java -Dhttp.proxyHost=proxy.consol.de -Dhttp.proxyPort=8001 -Dhttps.proxyHost=proxy.consol.de -Dhttps.proxyPort=8001 -Xmx800m -jar D:/Privat/minecraft/server/craftbukkit-1.2.5-R4.0.jar" />
+	
+	<property name="plugin.src.dir" value="${basedir}/src"/>
+	<property name="dist.home" value="${basedir}/dist"/>
+	<!-- as external-library: add the bukkit-server JAR/API to classpath -->
+	<path id="classpath">
+      <fileset dir="D:/Privat/minecraft/server">
+        <include name="craftbukkit-1.2.5-R4.0.jar"/>
+      </fileset>
+    </path>
+
+    
+    <target name="clean">
+		<delete dir="${dist.home}"/>
+    	<delete dir="${basedir}/classes"/>
+	</target>
+
+	<target name="compile" depends="clean" description="Compiles classes.">
+		<mkdir dir="${basedir}/classes"/>
+		<mkdir dir="${basedir}/classes/res"/>
+		<javac srcdir="${plugin.src.dir}" destdir="${basedir}/classes" classpathref="classpath" debug="on" source="1.6" target="1.6" optimize="off" deprecation="off"/>
+		<copy todir="${basedir}/classes">
+			<fileset dir="${plugin.src.dir}/resources"><include name="*.yml"/></fileset>
+		</copy>
+		<copy todir="${basedir}/classes">
+			<fileset dir="${plugin.src.dir}/resources/res"><include name="*.yml"/></fileset>
+		</copy>
+	</target>
+	
+	
+	<target name="dist" description="Builds JAR file for a distribution." depends="compile">
+		<mkdir dir="${dist.home}"/>
+		<jar jarfile="${dist.home}/Safari.jar" basedir="${basedir}/classes" includes="**"/>
+	</target>
+	
+	<target name="deploy and run" description="Deploys the Plugin and starts bukkit-server" depends="dist">
+		<copy todir="${minecraft.server.dir}/plugins">
+			<fileset dir="${dist.home}"><include name="*.jar"/></fileset>
+		</copy>
+		<exec executable="cmd" spawn="true">
+			<arg value="/c"/>
+			<arg value="${minecraft.server.run_command}"/>
+		</exec>
+	</target>
+
+	
+	<target name="deploy" description="Deploys the Plugin to the minecraft-server director" depends="dist">
+		<copy todir="${minecraft.server.dir}/plugins">
+			<fileset dir="${dist.home}"><include name="*.jar"/></fileset>
+		</copy>
+	</target>
+	
+</project>

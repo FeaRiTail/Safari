@@ -1,0 +1,156 @@
+### Safari Configuration File
+### 
+### GLOBAL SETTINGS
+global-settings:
+    enabled: true
+    allowed-commands: /start, /stop, /list, /info, /stats
+    update-notification: true
+
+
+###
+#
+# Some permission/config stuff
+#
+### enabled_worlds: Specifies, on which worlds the Safaris should work
+# e.g.: On Non-freebuild servers there usually is a "peaceful" world with no mobs spawning
+# and people building their homes. If such people would posess a Mob-spawner in their cellars,
+# they could easily cheat on Safaris...
+### admin_permission: this setting defines the permission which is necessary to set "safari.enabled_worlds".
+# may be used together with a permissions-plugin like PEX?    
+# the Plugin uses: if(player.hasPermission(config.get("safari.admin_permission"))) {} to
+# filter the command (or if the command comes from the servers console, which is always an indicator for admin ;) )
+
+safari:
+  enabled_worlds:
+    - world1
+    - world2
+  admin_permission: some.super.permission
+
+### Safari Configurations
+# Below you can configure the safaris which will be available on your server
+# in the "types_of_mobs_to_kill" Section you will have to provide the Mobs-Constant Values as defined in:
+# http://jd.bukkit.org/apidocs/org/bukkit/entity/EntityType.html
+# just put one Mob-Type per line, the Mob-Types may be spelled case-insensitive (so e.g.: "SLIME", "Slime" and "slime" are equally recognized)
+# for convenience, the Constants are listed at the end of the file
+
+# valid_hours: if null: safari is valid all day and night times
+# if valid_hours is set, it needs to be an array of "hours" (24-hour format: e.g. 14 = 2 p.m) into the list
+# like: [20,21,22,23,24,0,1,2,3,4] which corresponds to night-hours: 8 p.m. until 4 a.m.
+
+# drop configuration:
+# see:http://dev.bukkit.org/server-mods/lessfood/#w-configuration-file-example-config-yml
+# for config-parsing
+
+# 
+# (http://svn.lab.metakiwi.de/BukkitPlugins/LessFood/trunk/src/com/metakiwi/LessFood/Listener/MainListener.java)
+#
+
+safaris:
+    harmless:
+        description: Kill Mobs which are harmless (Cows, Chicken, Pig, Sheep)
+        name: Harmlose Jagd
+        required_points: 0
+        prize: test
+        mobs_to_kill: 5        
+        types_of_mobs_to_kill:
+            - CHICKEN
+            - COW
+            - PIG
+            - SHEEP
+    diver:
+        description: Go diving, kill squids
+        name: Harmless, but wet ;)
+        required_points: 0
+        prize: test
+        mobs_to_kill: 5        
+        types_of_mobs_to_kill:
+            - SQUID
+    teaparty:
+        description: Kill mobs during tea-time (14-17 Uhr)
+        name: Teatime
+        required_points: 1
+        prize: test
+        valid_hours: [14,15,16,17]
+        mobs_to_kill: 5        
+        types_of_mobs_to_kill:
+            - CHICKEN
+            - COW
+            - PIG
+            - SHEEP
+    night:
+        description: Kill mobs (Skelettons, Zombies, Zombie Pigmen) during night hours
+        name: Undead-Hunt
+        required_points: 1
+        prize: test
+        valid_hours: [20,21,22,23,0,1,2,3,4]
+        mobs_to_kill: 5
+        types_of_mobs_to_kill:
+            - SKELETON
+            - ZOMBIE
+            - PIG_ZOMBIE
+    undead:
+        description: Kill undead mobs (Skelettons, Zombies, Zombie Pigmen)
+        name: Untotenjagd
+        required_points: 2
+        prize: test
+        mobs_to_kill: 5
+        types_of_mobs_to_kill:
+            - SKELETON
+            - ZOMBIE
+            - PIG_ZOMBIE
+    ugly:
+        description: Kill ugly mobs (Slimes, Creeper)
+        name: Ekelfaktor hoch 10
+        required_points: 2
+        prize: test
+        mobs_to_kill: 5
+        types_of_mobs_to_kill:
+            - SLIME
+            - CREEPER
+    creepy:
+        description: KillCreeper
+        name: Spooky, explosive Hunt
+        required_points: 3
+        prize: test
+        mobs_to_kill: 5
+        types_of_mobs_to_kill:
+            - CREEPER
+    nether:
+        description: Kill Nether-mobs
+        name: Hunt in another dimension
+        required_points: 3
+        prize: test
+        mobs_to_kill: 5
+        types_of_mobs_to_kill:
+            - GHAST
+            - PIG_ZOMBIE
+            - BLAZE
+#####################
+# List of Mob-Types
+#####################    
+# BLAZE 
+# CAVE_SPIDER 
+# CHICKEN 
+# COW 
+# CREEPER 
+# ENDER_DRAGON 
+# ENDERMAN 
+# GHAST 
+# GIANT 
+# IRON_GOLEM 
+# MAGMA_CUBE 
+# MUSHROOM_COW 
+# OCELOT 
+# PIG 
+# PIG_ZOMBIE 
+# PLAYER 
+# SHEEP 
+# SILVERFISH 
+# SKELETON 
+# SLIME 
+# SNOWMAN 
+# SPIDER 
+# SQUID 
+# VILLAGER 
+# WOLF 
+# ZOMBIE    

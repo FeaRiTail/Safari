@@ -1,0 +1,37 @@
+name: Safari
+main: de.tink.minecraft.plugin.safari.SafariPlugin
+version: 0.1
+commands:
+    safari:
+        description: Base command for Safari
+        usage: |
+            Use:
+            /safari list - List all available safaris
+            /safari start <safariname> - Start the specified safari
+            /safari info - See your current safari and your safari points/statistics
+            /safari stop - Cancel your current safari
+    safari.list:
+        description: List available Safaris
+    safari.start:
+        description: Start the named Safari
+    safari.stop:
+        description: Stop current Safari
+    safari.info:
+        description: Display your Safari Stats
+permissions:
+    safari.use:
+        description: Gives access to usage commands
+        default: true
+        children:
+            safari.list: true
+            safari.start: true
+            safari.info: true
+            safari.stop: true
+    safari.list:
+        default: true
+    safari.start:
+        default: true
+    safari.info:
+        default: true
+    safari.stop:
+        default: true

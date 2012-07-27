@@ -100,7 +100,7 @@ public class SafariEventListener implements Listener {
 		List<String> relevantMobs = safariConfig.getStringList(mobKey);
 		boolean isRelevantMob = false;
 		for (String mobToKill : relevantMobs ) {
-			if ( killedMobType.getName().toLowerCase().equals(mobToKill.toLowerCase())) {
+			if ( "ANY".equals(mobToKill) || killedMobType.getName().toLowerCase().equals(mobToKill.toLowerCase())) {
 				isRelevantMob = true;
 			}
 		}

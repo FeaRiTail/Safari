@@ -33,6 +33,7 @@ public class SafariCommandExecutor implements org.bukkit.command.CommandExecutor
 	private Configuration playerConfig;
 
 	private String SAFARI_COMMAND_NO_PERMISSION = "No permission for this command!";
+	private String SAFARI_NOT_FOUND = "Safari ?1 not found.";
 	
 	private String SAFARI_WORLD_ADDED_SUCCESS =  "World \"?1\" is now activated for safaris.";
 	private String SAFARI_WORLD_ADD_ALREADY_REGISTERD =  "World \"?1\" is already activated for safaris.";
@@ -100,6 +101,9 @@ public class SafariCommandExecutor implements org.bukkit.command.CommandExecutor
 		// Start Safari
 		if (args != null && args.length == 2 && "start".equals(args[0])  && sender instanceof Player ) {
 			ConfigurationSection safariConfig = pluginConfig.getConfigurationSection("safaris." + args[1]);
+			if ( safariConfig == null ) {
+				sender.sendMessage(SAFARI_NOT_FOUND.replace("?1",args[1]));
+			}
 			Integer currentSafariPoints = playerConfig.getInt("registered_players." + sender.getName()+ ".current_safari_points");
 			if (currentSafariPoints == null) {
 				currentSafariPoints = 0;

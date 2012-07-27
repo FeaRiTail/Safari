@@ -38,9 +38,10 @@ public class SafariPlugin extends JavaPlugin {
 	private FileConfiguration playerConfig = null;
 	private File playerConfigFile = null;
 	
-	private String SAFARI_START_SUCCESS = "Deine Anmeldung zur Safari \"?1\" wurde gespeichert. Gute Jagd!";
-	private String SAFARI_END_SUCCESS = "Deine Safari wurde beendet.";
-	private String SAFARI_INFO_POINTS = "Du hast nun ?1 Safaripunkte.";
+	private String SAFARI_START_SUCCESS = "Enlisting for safari \"?1\" was saved successfully. Happy hunting!";
+	private String SAFARI_END_SUCCESS = "Your safari was completed successfully.";
+	private String SAFARI_INFO_POINTS = "You have ?1 safaripoints.";
+	private String SAFARI_PLAYER_CURRENTLY_ENLISTED = "You are currently enlisted for afari \"?1\". Cancel it or complete it before starting a new one.";
 
 	@Override
 	public void onDisable() {
@@ -70,7 +71,7 @@ public class SafariPlugin extends JavaPlugin {
 			reloadPlayerConfig();
 			player.sendMessage(SAFARI_START_SUCCESS.replace("?1", safariName));
 		} else  {
-				player.sendMessage("Du bist derzeit in der Safari \""+currentSafari+"\" aktiv. Breche Sie ab oder beende sie.");
+				player.sendMessage(SAFARI_PLAYER_CURRENTLY_ENLISTED.replace("?1", currentSafari));
 		}
 	}
 

@@ -43,6 +43,7 @@ public class SafariCommandExecutor implements org.bukkit.command.CommandExecutor
 	
 	private String SAFARI_PLAYER_LIST_AVAILABLE_SAFARIS = "You may register for the following safaris:";
 	private String SAFARI_PLAYER_CURRENT_SAFARI = "You are currently registerd for the safari \"?1\".";
+	private String SAFARI_PLAYER_KILL_PROGRESS = "You have killed ?1/?2 mobs sofar.";
 	private String SAFARI_PLAYER_CURRENT_POINTS = "You have gathered ?1 safari-points so far.";
 	private String SAFARI_PLAYER_NOT_ENOUGH_POINTS = "You are not eligible for this safari. You need at least ?1 safari-points to register for this safari.";
 	private String SAFARI_PLAYER_NONE_REGISTERED = "You are currently not enlisted for a safari.";
@@ -85,8 +86,17 @@ public class SafariCommandExecutor implements org.bukkit.command.CommandExecutor
 		// get current safari-status for player
 		if (args != null && args.length == 1 && "info".equals(args[0]) && sender instanceof Player ) {
 			String currentSafari = playerConfig.getString("registered_players."+ sender.getName() + ".safari");
+			Integer currentSafariMobsToKill = playerConfig.getInt("registered_players."+sender.getName()+".mobs_to_kill");
+			if ( currentSafariMobsToKill == null ) {
+				currentSafariMobsToKill = 0;
+			}
+			Integer currentSafariMobsKilled = playerConfig.getInt("registered_players."+sender.getName()+".mobs_killed");
+			if ( currentSafariMobsKilled == null ) {
+				currentSafariMobsKilled = 0;
+			}
 			if ( currentSafari != null) {				
 				sender.sendMessage(SAFARI_PLAYER_CURRENT_SAFARI.replace("?1", currentSafari));
+				sender.sendMessage(SAFARI_PLAYER_KILL_PROGRESS.replace("?1", currentSafariMobsKilled.toString()).replace("?2", currentSafariMobsToKill.toString()));
 			} else if (currentSafari == null) {
 				sender.sendMessage(SAFARI_PLAYER_NONE_REGISTERED);
 			}

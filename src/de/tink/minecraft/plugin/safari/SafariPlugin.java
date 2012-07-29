@@ -50,8 +50,7 @@ public class SafariPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		getConfig().options().copyDefaults(true);
-        saveConfig();
+        saveDefaultConfig();
         getPlayerConfig();
         savePlayerConfig();
         getLogger().info(this.toString() + " has been enabled.");

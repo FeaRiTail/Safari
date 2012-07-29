@@ -34,7 +34,7 @@ public class SafariEventListener implements Listener {
 	SafariPlugin plugin;
 	
 	private String SAFARI_FINISHED = "Congratulations, you have successfully completed this safari!";
-	private String SAFARI_KILL_COUNTS = "This kill is counting for your current safari!";
+	private String SAFARI_KILL_COUNTS = "This kill is counting for your current safari! ?1/?2 mobs killed.";
 	private String SAFARI_DROPS_MESSAGES = "Your reward for the completed safari:";
 	
 	@EventHandler
@@ -109,7 +109,7 @@ public class SafariEventListener implements Listener {
 		if ( isRelevantMob ) {
 			currentSafariMobsKilled++;
 			playerConfig.set("registered_players."+player.getName()+".mobs_killed",currentSafariMobsKilled);
-			player.sendMessage(SAFARI_KILL_COUNTS);
+			player.sendMessage(SAFARI_KILL_COUNTS.replace("?1", currentSafariMobsKilled.toString()).replace("?2",currentSafariMobsToKill.toString()));
 			plugin.savePlayerConfig();
 			if ( currentSafariMobsKilled == currentSafariMobsToKill ) {
 				player.sendMessage(SAFARI_FINISHED);

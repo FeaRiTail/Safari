@@ -2,15 +2,13 @@
 	
 	
 	<property name="minecraft.server.dir" value="D:/Privat/minecraft/server"/>
-	<property name="minecraft.server.run_command" value="D:/Privat/minecraft/server/startBukkit_Server.bat"/>
-	<property name="minecraft.server.run_command1" value="java -Dhttp.proxyHost=proxy.consol.de -Dhttp.proxyPort=8001 -Dhttps.proxyHost=proxy.consol.de -Dhttps.proxyPort=8001 -Xmx800m -jar D:/Privat/minecraft/server/craftbukkit-1.2.5-R4.0.jar" />
-	
+	<property name="minecraft.server.run_command" value="D:/Privat/minecraft/server/startBukkit_Server.bat"/>	
 	<property name="plugin.src.dir" value="${basedir}/src"/>
 	<property name="dist.home" value="${basedir}/dist"/>
 	<!-- as external-library: add the bukkit-server JAR/API to classpath -->
 	<path id="classpath">
       <fileset dir="D:/Privat/minecraft/server">
-        <include name="craftbukkit-1.2.5-R4.0.jar"/>
+        <include name="craftbukkit-1.2.5-R5.0.jar"/>
       </fileset>
     </path>
 

@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -41,7 +42,7 @@ public class SafariPlugin extends JavaPlugin {
 	private String SAFARI_START_SUCCESS = "Enlisting for safari \"?1\" was saved successfully. Happy hunting!";
 	private String SAFARI_END_SUCCESS = "Your safari was completed successfully.";
 	private String SAFARI_INFO_POINTS = "You have ?1 safaripoints.";
-	private String SAFARI_PLAYER_CURRENTLY_ENLISTED = "You are currently enlisted for afari \"?1\". Cancel it or complete it before starting a new one.";
+	private String SAFARI_PLAYER_CURRENTLY_ENLISTED = "You are currently enlisted for safari \"?1\". Cancel it or complete it before starting a new one.";
 
 	@Override
 	public void onDisable() {
@@ -62,10 +63,13 @@ public class SafariPlugin extends JavaPlugin {
 	
 	public void startSafari(Player player, String safariName) {
 		Configuration playerConfig = this.getPlayerConfig();
+		Integer mobsToKill = this.getConfig().getInt("safaris."+safariName+".mobs_to_kill");
 		String currentSafari = playerConfig.getString("registered_players."+player.getName()+".safari");
 		if ( currentSafari == null ) {
+			playerConfig.set("registered_players."+player.getName()+".mobs_to_kill", mobsToKill);
 			playerConfig.set("registered_players."+player.getName()+".safari", safariName);
 			playerConfig.set("registered_players."+player.getName()+".mobs_killed",0);
+			playerConfig.set("registered_players."+player.getName()+".safari_started",(new Date()).getTime());
 			savePlayerConfig();
 			reloadPlayerConfig();
 			player.sendMessage(SAFARI_START_SUCCESS.replace("?1", safariName));
@@ -85,6 +89,7 @@ public class SafariPlugin extends JavaPlugin {
 	// to be called upon fulfilling the Safari-Goal
 	public void fulfillSafari(Player player) {
 		reloadPlayerConfig();
+		Configuration config = getConfig();
 		
 		// increase points
 		Integer currentSafariPoints = playerConfig.getInt("registered_players."+player.getName()+".current_safari_points");
@@ -93,6 +98,10 @@ public class SafariPlugin extends JavaPlugin {
 		}
 		currentSafariPoints++;
 		playerConfig.set("registered_players."+player.getName()+".current_safari_points",currentSafariPoints);
+		
+
+		
+		
 		savePlayerConfig();
 		reloadPlayerConfig();
 		player.sendMessage(SAFARI_INFO_POINTS.replace("?1",currentSafariPoints.toString()));

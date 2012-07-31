@@ -42,8 +42,8 @@ public class SafariCommandExecutor implements org.bukkit.command.CommandExecutor
 	private String SAFARI_WORLD_REGISTER_NOT_FOUND = "World \"?1\" not found. Check spelling.";
 	
 	private String SAFARI_PLAYER_LIST_AVAILABLE_SAFARIS = "You may register for the following safaris:";
-	private String SAFARI_PLAYER_CURRENT_SAFARI = "You are currently registerd for the safari \"?1\".";
-	private String SAFARI_PLAYER_KILL_PROGRESS = "You have killed ?1/?2 mobs sofar.";
+	private String SAFARI_PLAYER_CURRENT_SAFARI = "You are currently registered for the safari \"?1\".";
+	private String SAFARI_PLAYER_KILL_PROGRESS = "You have killed ?1/?2 mobs so far.";
 	private String SAFARI_PLAYER_CURRENT_POINTS = "You have gathered ?1 safari-points so far.";
 	private String SAFARI_PLAYER_NOT_ENOUGH_POINTS = "You are not eligible for this safari. You need at least ?1 safari-points to register for this safari.";
 	private String SAFARI_PLAYER_NONE_REGISTERED = "You are currently not enlisted for a safari.";
@@ -135,6 +135,12 @@ public class SafariCommandExecutor implements org.bukkit.command.CommandExecutor
 		// Stop Safari
 		if (args != null && args.length == 1 && "stop".equals(args[0]) && sender instanceof Player ) {
 			plugin.stopSafari((Player) sender);
+			return true;
+		}
+		
+		// Show safari-records
+		if (args != null && args.length == 1 && "records".equals(args[0]) && sender instanceof Player ) {
+			
 			return true;
 		}
 

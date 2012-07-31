@@ -38,7 +38,7 @@ safari:
 # like: [20,21,22,23,24,0,1,2,3,4] which corresponds to night-hours: 8 p.m. until 4 a.m.
 
 # drop configuration:
-# for addDrops configuration syntax:
+# for addDrops and addRecordDrops configuration syntax:
 # see http://dev.bukkit.org/server-mods/lessfood/#w-configuration-file-example-config-yml
 # and for item-IDs see:
 # http://www.minecraftwiki.net/wiki/Data_values#Item_IDs
@@ -50,6 +50,8 @@ safaris:
         required_points: 0
         mobs_to_kill: 5
         addDrops:
+          '363': 2 10
+        addRecordDrops:
           '363': 2 10
         types_of_mobs_to_kill:
             - CHICKEN

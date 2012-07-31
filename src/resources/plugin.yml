@@ -1,6 +1,6 @@
 name: Safari
 main: de.tink.minecraft.plugin.safari.SafariPlugin
-version: 0.1
+version: 3
 commands:
     safari:
         description: Base command for Safari

@@ -25,9 +25,6 @@
 		<copy todir="${basedir}/classes">
 			<fileset dir="${plugin.src.dir}/resources"><include name="*.yml"/></fileset>
 		</copy>
-		<copy todir="${basedir}/classes">
-			<fileset dir="${plugin.src.dir}/resources/res"><include name="*.yml"/></fileset>
-		</copy>
 	</target>
 	
 	
@@ -47,7 +44,7 @@
 	</target>
 
 	
-	<target name="deploy" description="Deploys the Plugin to the minecraft-server director" depends="dist">
+	<target name="deploy" description="Deploys the Plugin to the minecraft-server directory" depends="dist">
 		<copy todir="${minecraft.server.dir}/plugins">
 			<fileset dir="${dist.home}"><include name="*.jar"/></fileset>
 		</copy>

@@ -17,9 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
@@ -36,6 +38,9 @@ public class SafariEventListener implements Listener {
 	private String SAFARI_FINISHED = "Congratulations, you have successfully completed this safari!";
 	private String SAFARI_KILL_COUNTS = "This kill is counting for your current safari! ?1/?2 mobs killed.";
 	private String SAFARI_DROPS_MESSAGES = "Your reward for the completed safari:";
+	private String SAFARI_PLAYER_CREATED_NEW_RECORD_FEEDBACK = "You scored a new record for this safari!";
+	private String SAFARI_PLAYER_CREATED_NEW_RECORD_WORLDSAY = "Congratulations! ?1 managed to complete the \"?2\" safari within a new record-time of: ?3!";
+
 	
 	@EventHandler
 	public void onMobKill(EntityDeathEvent deathEvent) {
@@ -51,6 +56,10 @@ public class SafariEventListener implements Listener {
 		boolean playerIsInSafari = false;
 		boolean killedByPlayer = false;
 		boolean killIsInSafariTimeframe = false;
+		boolean safariIsFulfilled = false;
+		boolean newRecordForSafari = false;
+		Long duration = null;
+		String basePath = null;
 		
 		if ( player != null ) {
 			killedByPlayer = true;
@@ -114,7 +123,7 @@ public class SafariEventListener implements Listener {
 			if ( currentSafariMobsKilled == currentSafariMobsToKill ) {
 				player.sendMessage(SAFARI_FINISHED);
 				player.sendMessage(SAFARI_DROPS_MESSAGES);
-				String basePath = "safaris."+currentSafari;
+				basePath = "safaris."+currentSafari;
 				// should we add drops?
 				ConfigurationSection addDropsSection = safariConfig.getConfigurationSection(basePath + ".addDrops");
 				if ( addDropsSection != null ){
@@ -123,15 +132,57 @@ public class SafariEventListener implements Listener {
 					for(String drop : addDrops) {
 						String amount = plugin.getConfig().getString(basePath + ".addDrops." + drop);
 						int itemAmount = parseInt(amount);
-						
 						if(itemAmount > 0) {
 							ItemStack newDrop = new ItemStack(Integer.parseInt(drop), itemAmount);
 							drops.add(newDrop);
 						}
 					}
 				}
-				plugin.fulfillSafari(player);
+				// calculate time needed to complete the safari and check for new record
+				Long safariStartedAt = playerConfig.getLong("registered_players."+player.getName()+".safari_started");
+				if ( safariStartedAt == null ) {
+					safariStartedAt = 0L;
+				}
+				Long currentSafariRecordTime = safariConfig.getLong("safaris."+ currentSafari + ".current_recordtime");
+				if ( currentSafariRecordTime == null ) {
+					currentSafariRecordTime = 0L;
+				}
+				Long now = (new Date()).getTime();
+				duration = now - safariStartedAt;
+				// Yippie, new record achieved!
+				if ( duration < currentSafariRecordTime || currentSafariRecordTime == 0 ) {
+					newRecordForSafari = true;
+				}
+				safariIsFulfilled = true;	
 			}
+		}
+		
+		if ( newRecordForSafari ) {
+			safariConfig.set("safaris."+ currentSafari + ".current_recordtime",duration);
+			safariConfig.set("safaris."+ currentSafari + ".current_recordholder",player.getName());
+			plugin.saveConfig();
+			int minutes = (int) ((duration / (1000*60)) % 60);
+			int hours   = (int) ((duration / (1000*60*60)) % 24);
+			String durationString = hours+":"+minutes;
+			player.sendMessage(ChatColor.BLUE+SAFARI_PLAYER_CREATED_NEW_RECORD_FEEDBACK);
+			plugin.getServer().broadcastMessage(ChatColor.BLUE+SAFARI_PLAYER_CREATED_NEW_RECORD_WORLDSAY.replace("?1",player.getName()).replace("?2", currentSafari).replace("?3",durationString));
+			ConfigurationSection addDropsSection = safariConfig.getConfigurationSection(basePath + ".addRecordDrops");
+			if ( addDropsSection != null ){
+				Set<String> addDrops = addDropsSection.getKeys(false);
+				List<ItemStack> drops = deathEvent.getDrops();
+				for(String drop : addDrops) {
+					String amount = plugin.getConfig().getString(basePath + ".addRecordDrops." + drop);
+					int itemAmount = parseInt(amount);
+					if(itemAmount > 0) {
+						ItemStack newDrop = new ItemStack(Integer.parseInt(drop), itemAmount);
+						drops.add(newDrop);
+					}
+				}
+			}
+		}
+		
+		if ( safariIsFulfilled ) {
+			plugin.fulfillSafari(player);
 		}
 	}
 	

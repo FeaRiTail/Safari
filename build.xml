@@ -1,6 +1,5 @@
 <project name="Minecraft Safari-Plugin" default="deploy" basedir=".">
 	
-	
 	<property name="minecraft.server.dir" value="D:/Privat/minecraft/server"/>
 	<property name="minecraft.server.run_command" value="D:/Privat/minecraft/server/startBukkit_Server.bat"/>	
 	<property name="plugin.src.dir" value="${basedir}/src"/>
@@ -8,10 +7,9 @@
 	<!-- as external-library: add the bukkit-server JAR/API to classpath -->
 	<path id="classpath">
       <fileset dir="D:/Privat/minecraft/server">
-        <include name="craftbukkit-1.2.5-R5.0.jar"/>
+        <include name="craftbukkit-1.3.1-R1.0.jar"/>
       </fileset>
     </path>
-
     
     <target name="clean">
 		<delete dir="${dist.home}"/>
@@ -27,7 +25,6 @@
 		</copy>
 	</target>
 	
-	
 	<target name="dist" description="Builds JAR file for a distribution." depends="compile">
 		<mkdir dir="${dist.home}"/>
 		<jar jarfile="${dist.home}/Safari.jar" basedir="${basedir}/classes" includes="**"/>
@@ -42,7 +39,6 @@
 			<arg value="${minecraft.server.run_command}"/>
 		</exec>
 	</target>
-
 	
 	<target name="deploy" description="Deploys the Plugin to the minecraft-server directory" depends="dist">
 		<copy todir="${minecraft.server.dir}/plugins">

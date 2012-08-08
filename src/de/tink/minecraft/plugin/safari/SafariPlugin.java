@@ -27,6 +27,7 @@ import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -36,8 +37,11 @@ public class SafariPlugin extends JavaPlugin {
 	private SafariCommandExecutor safariCommmandExecutor;
 	private SafariEventListener safariEventListener;
 	private static String playerConfigFileName = "playerData.yml";
+	private static String groupsConfigFileName = "groupsData.yml";
 	private FileConfiguration playerConfig = null;
 	private File playerConfigFile = null;
+	private FileConfiguration groupsConfig = null;
+	private File groupsConfigFile = null;
 	
 	private String SAFARI_START_SUCCESS = "Enlisting for safari \"?1\" was saved successfully. Happy hunting!";
 	private String SAFARI_END_SUCCESS = "Your safari was completed successfully.";
@@ -54,6 +58,8 @@ public class SafariPlugin extends JavaPlugin {
         saveDefaultConfig();
         getPlayerConfig();
         savePlayerConfig();
+        getGroupsConfig();
+        saveGroupConfig();
         getLogger().info(this.toString() + " has been enabled.");
 		safariCommmandExecutor = new SafariCommandExecutor(this);
 		safariEventListener = new SafariEventListener(this);
@@ -89,8 +95,6 @@ public class SafariPlugin extends JavaPlugin {
 	// to be called upon fulfilling the Safari-Goal
 	public void fulfillSafari(Player player) {
 		reloadPlayerConfig();
-		Configuration config = getConfig();
-		
 		// increase points
 		Integer currentSafariPoints = playerConfig.getInt("registered_players."+player.getName()+".current_safari_points");
 		if ( currentSafariPoints == null ) {
@@ -98,14 +102,9 @@ public class SafariPlugin extends JavaPlugin {
 		}
 		currentSafariPoints++;
 		playerConfig.set("registered_players."+player.getName()+".current_safari_points",currentSafariPoints);
-		
-
-		
-		
 		savePlayerConfig();
 		reloadPlayerConfig();
 		player.sendMessage(SAFARI_INFO_POINTS.replace("?1",currentSafariPoints.toString()));
-		
 		// unregister Safari
 		stopSafari(player);
 	}
@@ -128,6 +127,39 @@ public class SafariPlugin extends JavaPlugin {
 		config.set(configKey, enabledWorlds);
 		saveConfig();
 		reloadConfig();		
+	}
+	
+	public void startGroup(CommandSender groupLead) {
+		groupsConfig.set("groups."+groupLead.getName(), groupLead.getName());
+		saveGroupConfig();
+	}
+	
+	public void kickPlayer(CommandSender groupLead) {
+		
+	}
+	
+	public void leaveGroup(CommandSender groupMember) {
+		
+	}
+	
+	public void transferGroupLead(CommandSender groupLead, String newLead) {
+
+	}
+	
+	public void disbandGroup(CommandSender groupLead) {
+		
+	}
+	
+	public void addJoinRequest(CommandSender requestingPlayer, String targetGroup) {
+		
+	}
+	
+	public void invitePlayer(CommandSender groupLead, String invitedPlayerName ) {
+		
+	}
+	
+	public List<String> getGroupMembers (CommandSender sender ) {
+		return groupsConfig.getStringList("groups."+sender.getName()+".members");
 	}
 	
 	public void reloadPlayerConfig() {
@@ -162,4 +194,35 @@ public class SafariPlugin extends JavaPlugin {
         }
     }
 
+	public void reloadGroupsConfig() {
+        if (groupsConfigFile == null) {
+        	groupsConfigFile = new File(getDataFolder(), groupsConfigFileName);
+        }
+        groupsConfig = YamlConfiguration.loadConfiguration(groupsConfigFile);
+        // Look for defaults in the jar
+        InputStream groupsConfigStream = this.getResource(groupsConfigFileName);
+        if (groupsConfigStream != null) {
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(groupsConfigStream);
+            groupsConfig.setDefaults(defConfig);
+        }
+    }
+	
+	public FileConfiguration getGroupsConfig() {
+        if (groupsConfig == null) {
+            this.reloadGroupsConfig();
+        }
+        return groupsConfig;
+    }
+	
+	
+	public void saveGroupConfig() {
+        if (groupsConfig == null || groupsConfigFile == null) {
+        return;
+        }
+        try {
+        	getGroupsConfig().save(groupsConfigFile);
+        } catch (IOException ex) {
+            this.getLogger().log(Level.SEVERE, "Could not save config to " + groupsConfigFile, ex);
+        }
+    }
 }

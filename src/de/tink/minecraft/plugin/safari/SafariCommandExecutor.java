@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -31,6 +32,7 @@ public class SafariCommandExecutor implements org.bukkit.command.CommandExecutor
 	private SafariPlugin plugin;
 	private Configuration pluginConfig;
 	private Configuration playerConfig;
+	private Configuration groupsConfig;
 
 	private String SAFARI_COMMAND_NO_PERMISSION = "No permission for this command!";
 	private String SAFARI_NOT_FOUND = "Safari ?1 not found.";
@@ -47,12 +49,21 @@ public class SafariCommandExecutor implements org.bukkit.command.CommandExecutor
 	private String SAFARI_PLAYER_CURRENT_POINTS = "You have gathered ?1 safari-points so far.";
 	private String SAFARI_PLAYER_NOT_ENOUGH_POINTS = "You are not eligible for this safari. You need at least ?1 safari-points to register for this safari.";
 	private String SAFARI_PLAYER_NONE_REGISTERED = "You are currently not enlisted for a safari.";
+	
+	private String SAFARI_RECORDS_HEADER = "These are the current safari-records (Player and record-time)";
+	private String SAFARI_RECORD_ENTRY = ChatColor.BLUE+"<SAFARI>"+ChatColor.WHITE+": "+ChatColor.RED+"<RECORDTIME>"+ChatColor.WHITE+" by "+ChatColor.RED+"<PLAYER>";
+	private String SAFARI_NO_RECORD_AVAILABLE = ChatColor.BLUE+"?1"+ChatColor.WHITE+": No record available yet";
+	
+	
+	private String SAFARI_GROUP_STARTED = "You successfully created a safari-group. Players now can join your group by "+ChatColor.BLUE+"/safari join <PLAYER>."+ChatColor.WHITE+"You can also invite other players:"+ChatColor.BLUE+"/safari invite <Playername>";
+	private String SAFARI_GROUP_DISBANDED = "The safari-group was successfully disbanded.";
+	private String SAFARI_GROUP_NOT_LEADER = "You are not the current group-leader.";
+	private String SAFARI_GROUP_LEAD_NOT_TRANSFERRABLE = "You cannot transfer the group-lead to ?1 (is not in your group)";
+	private String SAFARI_GROUP_NOT_FOUND = "Group \"?1\" not found, joining this group is not possible";
+	private String SAFARI_GROUP_NEW_LEADER = "<PLAYER> is now the new group-leader.";
 
 	public SafariCommandExecutor(SafariPlugin plugin) {
 		this.plugin = plugin;
-		this.pluginConfig = plugin.getConfig();
-		this.playerConfig = plugin.getPlayerConfig();
-
 	}
 
 	@Override
@@ -62,6 +73,10 @@ public class SafariCommandExecutor implements org.bukkit.command.CommandExecutor
 		}
 		pluginConfig = plugin.getConfig();
 		playerConfig = plugin.getPlayerConfig();
+		groupsConfig = plugin.getGroupsConfig();
+		boolean isGroupLead = false;
+		boolean isGroupMember = false;
+		String memberInGroup = null;
 
 		// List Safaris
 		if (args != null && args.length >= 1 && "list".equals(args[0]) ) {
@@ -139,10 +154,81 @@ public class SafariCommandExecutor implements org.bukkit.command.CommandExecutor
 		}
 		
 		// Show safari-records
-		if (args != null && args.length == 1 && "records".equals(args[0]) && sender instanceof Player ) {
+		// to current player (if command is sent by a player or to another online-player (if command is sent by console)
+		if (args != null && args.length >= 1 && "showrecords".equals(args[0]) ) {
+			if ( sender instanceof Player ) {
+				sender.sendMessage(SAFARI_RECORDS_HEADER);
+			} else if ( !( sender instanceof Player ) && args[1] != null ) {
+				Player toPlayer = plugin.getServer().getPlayer(args[1]);
+				if ( toPlayer.isOnline() ) {
+					toPlayer.sendMessage(SAFARI_RECORDS_HEADER);
+				}
+			}
 			
+			Set<String> safaris = pluginConfig.getConfigurationSection("safaris").getKeys(false);
+			for ( String safari : safaris ) {
+				String currentRecordHolder = pluginConfig.getString("safaris."+safari+".current_recordholder");
+				Long currentRecordTime = pluginConfig.getLong("safaris."+safari+".current_recordtime");
+				int minutes = (int) ((currentRecordTime / (1000*60)) % 60);
+				int hours   = (int) ((currentRecordTime / (1000*60*60)) % 24);
+				String durationString = hours+":"+minutes;
+				String toSend = "";
+				if ( currentRecordHolder != null && currentRecordTime != null ) {
+					toSend = SAFARI_RECORD_ENTRY.replace("<SAFARI>",safari).replace("<RECORDTIME>",durationString).replace("<PLAYER>", currentRecordHolder);
+				} else {
+					toSend = SAFARI_NO_RECORD_AVAILABLE.replace("?1", safari);
+				}
+				if ( sender instanceof Player ) {
+					sender.sendMessage(toSend);
+				} else if ( !( sender instanceof Player ) && args[1] != null ) {
+					Player toPlayer = plugin.getServer().getPlayer(args[1]);
+					if ( toPlayer.isOnline() ) {
+						toPlayer.sendMessage(toSend);
+					}
+				}
+			}
 			return true;
 		}
+		
+		// Group-Commands Start
+		
+		// First let´s see if the sender is already a group-leader or a group-member
+		ConfigurationSection groupLeaderSection = groupsConfig.getConfigurationSection("groups");
+		if ( groupLeaderSection != null ) {
+			Set<String> groupLeaders = groupLeaderSection.getKeys(false);
+			for ( String groupLeader : groupLeaders ) {
+				if ( sender instanceof Player && groupLeader.equals(sender.getName())) {
+					isGroupLead = true;
+				}
+				List<String> groupMembers = groupsConfig.getStringList("groups."+groupLeader+".members");
+				if ( groupMembers != null ) {
+					for ( String groupMember : groupMembers ) {
+						if ( sender instanceof Player && groupMember.equals(sender.getName())) {
+							isGroupMember = true;
+							memberInGroup = groupLeader;
+						}
+					}
+				}
+			}
+		}
+		
+		
+		if (args != null && args.length == 1 && "start_group".equals(args[0]) && sender instanceof Player ) {
+			plugin.startGroup(sender);
+			sender.sendMessage(SAFARI_GROUP_STARTED.replace("<PLAYER>", sender.getName()));
+			return true;
+		}
+		
+		
+		
+		
+		if (args != null && args.length == 1 && "listgroupmembers".equals(args[0]) && sender instanceof Player ) {
+			return true;
+		}		
+		
+		// Group-Commands End
+		
+
 
 		/*
 		 * Admin Commands below! Proceed with caution ;)

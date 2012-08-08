@@ -1,6 +1,6 @@
 name: Safari
 main: de.tink.minecraft.plugin.safari.SafariPlugin
-version: 3
+version: 3.1
 commands:
     safari:
         description: Base command for Safari
@@ -10,6 +10,7 @@ commands:
             /safari start <safariname> - Start the specified safari
             /safari info - See your current safari and your safari points/statistics
             /safari stop - Cancel your current safari
+            /safari showrecords - Show current record-statistics for each safari
     safari.list:
         description: List available Safaris
     safari.start:
@@ -18,6 +19,8 @@ commands:
         description: Stop current Safari
     safari.info:
         description: Display your Safari Stats
+    safari.showrecords:
+        description: Show record-times and record-holders for each available safari
 permissions:
     safari.use:
         description: Gives access to usage commands
@@ -27,6 +30,7 @@ permissions:
             safari.start: true
             safari.info: true
             safari.stop: true
+            safari.showrecords: true
     safari.list:
         default: true
     safari.start:
@@ -34,4 +38,6 @@ permissions:
     safari.info:
         default: true
     safari.stop:
+        default: true
+    safari.showrecords:
         default: true

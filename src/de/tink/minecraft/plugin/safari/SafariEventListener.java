@@ -52,6 +52,7 @@ public class SafariEventListener implements Listener {
 		}
 		Configuration playerConfig = plugin.getPlayerConfig();
 		Configuration safariConfig = plugin.getConfig();
+		Configuration groupsConfig = plugin.getGroupsConfig();
 		ConfigurationSection registeredPlayerSection = null;
 		boolean playerIsInSafari = false;
 		boolean killedByPlayer = false;

@@ -3,7 +3,7 @@
 ### GLOBAL SETTINGS
 global-settings:
     enabled: true
-    allowed-commands: /start, /stop, /list, /info
+    allowed-commands: /start, /stop, /list, /info, /showrecords
     update-notification: true
 
 

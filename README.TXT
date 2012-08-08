@@ -15,7 +15,11 @@ Please file them here:
 https://github.com/FeaRiTail/Safari/issues
 
 
-This plugin was developed on a craftbukkit-server 1.2.5 R4.0.
+This plugin was initially developed on a craftbukkit-server 1.2.5 R4.0.
+The plugin is known to work with the following bukkit-versions:
+* 1.2.5 R4.0
+* 1.2.5 R5.0
+* 1.3.1 R1.0  
 
 Also: Thanks to metakiwi for allowing access to the "Drop-Config" Logic
 of his "LessFood" Plugin (http://dev.bukkit.org/server-mods/lessfood/)
